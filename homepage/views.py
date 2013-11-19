@@ -1,4 +1,4 @@
-from random import randrange
+from random import sample
 
 from django.db.models import Count
 from django.http import HttpResponse
@@ -9,7 +9,7 @@ import feedparser
 from core.decorators import lru_cache
 from grid.models import Grid
 from homepage.models import Dpotw, Gotw, PSA
-from package.models import Category, Package
+from package.models import Category, Package, Version
 
 
 @lru_cache()
@@ -38,16 +38,14 @@ def homepage(request, template_name="homepage.html"):
     if package_count > 1:
         package_ids = set([])
 
-        for i in range(10):
-            package_ids.add(randrange(1, package_count + 1))
+        # Get 5 random keys
+        package_ids = sample(
+            range(1, package_count + 1),  # generate a list from 1 to package_count +1
+            min(package_count, 5)  # Get a sample of the smaller of 5 or the package count
+        )
 
-        for i, package_id in enumerate(package_ids):
-            try:
-                random_packages.append(Package.objects.get(id=package_id))
-            except Package.DoesNotExist:
-                pass
-            if len(random_packages) == 5:
-                break
+        # Get the random packages
+        random_packages = Package.objects.filter(pk__in=package_ids)[:5]
 
     try:
         potw = Dpotw.objects.latest().package
@@ -90,7 +88,8 @@ def homepage(request, template_name="homepage.html"):
             "blogpost_body": blogpost_body,
             "categories": categories,
             "package_count": package_count,
-            "py3_compat": Package.objects.filter(version__supports_python3=True).select_related().distinct().count()
+            "py3_compat": Package.objects.filter(version__supports_python3=True).select_related().distinct().count(),
+            "latest_python3": Version.objects.filter(supports_python3=True).select_related("package").distinct().order_by("-created")[0:5]
         }
     )
 
@@ -111,7 +110,12 @@ def error_404_view(request):
 
 
 def py3_compat(request, template_name="py3_compat.html"):
+    packages = Package.objects.filter(version__supports_python3=True)
+    packages = packages.distinct()
+    packages = packages.annotate(usage_count=Count("usage"))
+    packages.order_by("-repo_watchers", "title")
     return render(request, template_name, {
-        "packages": Package.objects.filter(version__supports_python3=True).distinct().annotate(usage_count=Count("usage")).order_by("-repo_watchers", "title")
+        "packages": packages
         }
     )
+
