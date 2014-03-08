@@ -69,7 +69,9 @@ Direct Contributors
 * Kenneth Love
 * Kenneth Reitz
 * @kerridge0
+* Kulbir Singh
 * Marc Tamlyn
+* Marcin Lulek
 * Mike Fiedler
 * Mike Johnson
 * Nate Aune
@@ -83,6 +85,7 @@ Direct Contributors
 * Taavi Taijala
 * Taylor Mitchell
 * Tom Brander
+* Yony Narlock
 * Vasja Volin
 
 Other Contributors
