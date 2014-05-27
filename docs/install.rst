@@ -14,6 +14,7 @@ Download and install setuptools from http://pypi.python.org/pypi/setuptools.  Se
 
     easy_install pip
     pip install virtualenv
+    brew install libmemcached
 
 Ubuntu (10+ /  Lucid or Higher)
 --------------------------------
@@ -42,7 +43,7 @@ Open up a command prompt.  Install pip and virtualenv::
 
     easy_install pip
     pip install virtualenv
-    
+
 Other operating systems (including various Linux flavors)
 ---------------------------------------------------------
 
@@ -51,12 +52,12 @@ We don't provide instructions for these, but you should be able to figure things
 Main instructions
 =================
 
-These instructions install OpenComparison on your computer, using PostgreSQL and sample data.
+These instructions install Django Packages on your computer, using PostgreSQL and sample data.
 
 Git clone the project and install requirements
 ------------------------------------------------
 
-Create a virtualenv, activate it, git clone the OpenComparison project, and install its requirements::
+Create a virtualenv, activate it, git clone the Django Packages project, and install its requirements::
 
     cd <installation-directory>
     virtualenv env-oc

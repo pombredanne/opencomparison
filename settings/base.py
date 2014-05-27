@@ -79,10 +79,11 @@ MIDDLEWARE_CLASSES = (
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "core.middleware.UserBasedExceptionMiddleware",
     "reversion.middleware.RevisionMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "pagination.middleware.PaginationMiddleware",
-    "django_sorting.middleware.SortingMiddleware",
+    "django_sorting.middleware.SortingMiddleware"
 )
 
 TEMPLATE_DIRS = [
@@ -115,6 +116,7 @@ PROJECT_APPS = [
     "apiv1",
     "feeds",
     "searchv2",
+    "apiv3"
 ]
 
 PREREQ_APPS = [

@@ -54,6 +54,7 @@ Direct Contributors
 * Dougal Matthews (@d0ugal)
 * Eric Spunagle
 * Evgeny Fadeev
+* Fábio C. Barrionuevo da Luz
 * Flaviu Simihaian
 * George Dorn
 * Gisle Aas  (Repo Man)
@@ -69,7 +70,9 @@ Direct Contributors
 * Kenneth Love
 * Kenneth Reitz
 * @kerridge0
+* Kulbir Singh
 * Marc Tamlyn
+* Marcin Lulek
 * Mike Fiedler
 * Mike Johnson
 * Nate Aune
@@ -83,6 +86,7 @@ Direct Contributors
 * Taavi Taijala
 * Taylor Mitchell
 * Tom Brander
+* Yony Narlock
 * Vasja Volin
 
 Other Contributors

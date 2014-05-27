@@ -42,6 +42,10 @@ class Category(BaseModel):
     def __unicode__(self):
         return self.title
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ("category", [self.slug])
+
 
 class Package(BaseModel):
 
@@ -212,13 +216,13 @@ class Package(BaseModel):
             return True
         return False
 
-    def fetch_metadata(self, fetch_pypi=True):
+    def fetch_metadata(self, fetch_pypi=True, fetch_repo=True):
 
         if fetch_pypi:
             self.fetch_pypi_data()
-        self.repo.fetch_metadata(self)
+        if fetch_repo:
+            self.repo.fetch_metadata(self)
         signal_fetch_latest_metadata.send(sender=self)
-        self.last_fetched = timezone.now()
         self.save()
 
     def grid_clear_detail_template_cache(self):
