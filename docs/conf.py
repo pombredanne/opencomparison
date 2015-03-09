@@ -21,12 +21,12 @@ import sys, os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
-sys.path.insert(0, os.path.abspath('../../'))
-sys.path.insert(0, os.path.abspath('../'))
+# sys.path.insert(0, os.path.abspath('../../'))
+# sys.path.insert(0, os.path.abspath('../'))
 
-from settings import base
-from django.core.management import setup_environ
-setup_environ(base)
+# from settings import base
+# from django.core.management import setup_environ
+# setup_environ(base)
 
 # -- General configuration -----------------------------------------------------
 
@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Django Packages'
-copyright = u'2010-2012, Audrey Roy, Daniel Greenfeld and contributors'
+copyright = u'2010-2015, Audrey Roy Greenfeld, Daniel Roy Greenfeld and contributors'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

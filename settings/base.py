@@ -230,7 +230,7 @@ GITHUB_API_SECRET = environ.get('GITHUB_API_SECRET')
 GITHUB_APP_ID = environ.get('GITHUB_APP_ID')
 GITHUB_USERNAME = environ.get('GITHUB_USERNAME')
 GITHUB_PASSWORD = environ.get('GITHUB_PASSWORD')
-SOCIAL_AUTH_ENABLED_BACKENDS = ('github')
+SOCIAL_AUTH_ENABLED_BACKENDS = ('github', )
 SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'associate_complete'
 SOCIAL_AUTH_DEFAULT_USERNAME = lambda u: slugify(u)
@@ -394,3 +394,9 @@ License :: Other/Proprietary License
 License :: Public Domain
 License :: Repoze Public License""".splitlines()
 ########### End LICENSES from PyPI
+
+
+########## GITHUB
+GITHUB_API_SECRET = environ.get('GITHUB_API_SECRET')
+GITHUB_APP_ID = environ.get('GITHUB_APP_ID')
+GITHUB_TOKEN = environ.get('GITHUB_TOKEN')

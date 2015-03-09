@@ -18,8 +18,8 @@ class GitHubHandler(BaseHandler):
     slug_regex = repo_regex
 
     def __init__(self):
-        if settings.GITHUB_USERNAME:
-            self.github = login(settings.GITHUB_USERNAME, settings.GITHUB_PASSWORD)
+        if settings.GITHUB_TOKEN:
+            self.github = login(token=settings.GITHUB_TOKEN)
         else:
             self.github = GitHub()
 
@@ -27,9 +27,7 @@ class GitHubHandler(BaseHandler):
         while self.github.ratelimit_remaining < 10:
             sleep(1)
 
-    def fetch_metadata(self, package):
-        self.manage_ratelimit()
-
+    def _get_repo(self, package):
         repo_name = package.repo_name()
         if repo_name.endswith("/"):
             repo_name = repo_name[:-1]
@@ -37,7 +35,12 @@ class GitHubHandler(BaseHandler):
             username, repo_name = package.repo_name().split('/')
         except ValueError:
             return package
-        repo = self.github.repository(username, repo_name)
+        return self.github.repository(username, repo_name)
+
+
+    def fetch_metadata(self, package):
+        self.manage_ratelimit()
+        repo = self._get_repo(package)
         if repo is None:
             return package
 
@@ -45,7 +48,11 @@ class GitHubHandler(BaseHandler):
         package.repo_forks = repo.forks
         package.repo_description = repo.description
 
-        contributors = [x.login for x in repo.iter_contributors()]
+        contributors = []
+        for contributor in repo.iter_contributors():
+            contributors.append(contributor.login)
+            self.manage_ratelimit()
+
         if contributors:
             package.participants = ','.join(uniquer(contributors))
 
@@ -54,34 +61,25 @@ class GitHubHandler(BaseHandler):
     def fetch_commits(self, package):
 
         self.manage_ratelimit()
-        repo_name = package.repo_name()
-        if repo_name.endswith("/"):
-            repo_name = repo_name[:-1]
-        try:
-            username, repo_name = package.repo_name().split('/')
-        except ValueError:
-            # TODO error #248
+        repo = self._get_repo(package)
+        if repo is None:
             return package
 
-        if settings.GITHUB_USERNAME:
-            r = requests.get(
-                url='https://api.github.com/repos/{}/{}/commits?per_page=100'.format(username, repo_name),
-                auth=(settings.GITHUB_USERNAME, settings.GITHUB_PASSWORD)
-            )
-        else:
-            r = requests.get(
-                url='https://api.github.com/repos/{}/{}/commits?per_page=100'.format(username, repo_name)
-            )
-        if r.status_code == 200:
-            from package.models import Commit  # Added here to avoid circular imports
-            for commit in [x['commit'] for x in r.json()]:
-                try:
-                    commit, created = Commit.objects.get_or_create(
-                        package=package,
-                        commit_date=commit['committer']['date']
-                    )
-                except Commit.MultipleObjectsReturned:
-                    pass
+        from package.models import Commit  # Added here to avoid circular imports
+
+        for commit in repo.iter_commits():
+            self.manage_ratelimit()
+            try:
+                commit_record, created = Commit.objects.get_or_create(
+                    package=package,
+                    commit_date=commit.commit.committer['date']
+                )
+                if not created:
+                    break
+            except Commit.MultipleObjectsReturned:
+                continue
+            # If the commit record already exists, it means we are at the end of the
+            #   list we want to import
 
         package.save()
         return package
